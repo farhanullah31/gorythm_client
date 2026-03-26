@@ -248,3 +248,11 @@
   .video-play-btn { width: 96px; height: 96px; }
   .video-play-text { font-size: 0.8rem; }
 }
+
+// Portrait phones + iPad Mini: space before Marquee
+@media (max-width: $bp-section-md) and (orientation: portrait),
+  (min-width: $bp-ipad-mini-min) and (max-width: $bp-ipad-mini-max) and (orientation: portrait) {
+  .video-section {
+    margin-bottom: clamp(28px, 8vw, 48px);
+  }
+}

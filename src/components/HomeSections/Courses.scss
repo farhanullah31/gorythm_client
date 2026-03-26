@@ -459,6 +459,8 @@
     padding-right: 20px;
   }
   .courses-section-right {
+    padding-left: 20px;
+    padding-right: 20px;
     padding-bottom: 36px; // reduce end-of-section whitespace before Subscribe in portrait
   }
   .courses-section-left-footer {
@@ -609,5 +611,13 @@
   .courses-section-item-duration,
   .courses-section-item-audience {
     font-size: 1.2rem;
+  }
+}
+
+// Portrait phones + iPad Mini: space after Marquee before Courses
+@media (max-width: $bp-section-md) and (orientation: portrait),
+  (min-width: $bp-ipad-mini-min) and (max-width: $bp-ipad-mini-max) and (orientation: portrait) {
+  .courses-section {
+    padding-top: clamp(28px, 7vw, 44px);
   }
 }

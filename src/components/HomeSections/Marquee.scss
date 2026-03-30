@@ -72,7 +72,7 @@
 // =============================================================================
 
 // Slightly reduce vertical padding on tablet
-@media (max-width: $bp-section-md) {
+@media (max-width: ($bp-section-sm - 1)) {
   .marquee-section { padding: 24px 0; }
 }
 
@@ -106,9 +106,8 @@
   .marquee-track   { animation-duration: 125s; }
 }
 
-// Portrait phones + iPad Mini: more vertical space Video → Marquee → Courses
-@media (max-width: $bp-section-md) and (orientation: portrait),
-  (min-width: $bp-ipad-mini-min) and (max-width: $bp-ipad-mini-max) and (orientation: portrait) {
+// Portrait phone: more vertical space Video → Marquee → Courses
+@media (max-width: ($bp-section-sm - 1)) and (orientation: portrait) {
   .marquee-section {
     padding-top: clamp(40px, 11vw, 64px);
     padding-bottom: clamp(40px, 11vw, 64px);

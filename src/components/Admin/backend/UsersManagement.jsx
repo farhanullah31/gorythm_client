@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './UsersManagement.scss';
 
@@ -34,21 +34,13 @@ const UsersManagement = () => {
         { value: 'student', label: 'Student', icon: 'fa-user-graduate' }
     ];
 
-    useEffect(() => {
-        fetchUsers();
-    }, []);
-
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
             
             const response = await axios.get('http://localhost:5000/api/users', {
                 headers: { Authorization: `Bearer ${token}` },
-                params: {
-                    search: searchTerm || undefined,
-                    role: filterRole !== 'all' ? filterRole : undefined
-                }
             });
 
             if (response.data.success) {
@@ -64,7 +56,11 @@ const UsersManagement = () => {
             setUsers([]);
             setLoading(false);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        fetchUsers();
+    }, [fetchUsers]);
 
     const openCreateModal = () => {
         setEditingUser(null);

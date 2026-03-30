@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './DashboardHome.scss';
@@ -19,13 +19,7 @@ const DashboardHome = () => {
     // Get user from localStorage
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-    // Fetch dashboard data from backend
-    useEffect(() => {
-        fetchDashboardData();
-        checkBackendHealth();
-    }, []);
-
-    const checkBackendHealth = async () => {
+    const checkBackendHealth = useCallback(async () => {
         try {
             const response = await axios.get('http://localhost:5000/health');
             setBackendStatus('connected');
@@ -34,9 +28,9 @@ const DashboardHome = () => {
             setBackendStatus('disconnected');
             console.log('⚠️ Backend not responding');
         }
-    };
+    }, []);
 
-    const fetchDashboardData = async () => {
+    const fetchDashboardData = useCallback(async () => {
         try {
             setLoading(true);
             setError('');
@@ -79,7 +73,13 @@ const DashboardHome = () => {
             setError('Backend connection failed. No data available.');
             setLoading(false);
         }
-    };
+    }, [backendStatus, navigate]);
+
+    // Fetch dashboard data from backend
+    useEffect(() => {
+        fetchDashboardData();
+        checkBackendHealth();
+    }, [fetchDashboardData, checkBackendHealth]);
 
     const statsData = [
         { 

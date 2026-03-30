@@ -34,6 +34,41 @@ $bp-section-landscape-se: 568px; // iPhone SE 1st gen landscape width
 $bp-ipad-mini-min: 744px;
 $bp-ipad-mini-max: 768px;
 
+// Homepage legacy thresholds (tokenized to preserve current behavior while
+// removing hardcoded media-query values across HomeSections).
+$bp-home-mobile-max: 768px;
+$bp-home-phone-sm-max: 576px;
+$bp-home-tablet-max: 992px;
+$bp-home-landscape-max: 1100px;
+$bp-home-landscape-short-max: 500px;
+$bp-home-landscape-very-short-max: 430px;
+$bp-home-landscape-ultra-short-max: 325px;
+$bp-home-landscape-tight-min: 640px;
+$bp-home-landscape-tight-max: 740px;
+$bp-home-landscape-tallish-max: 720px;
+$bp-home-landscape-tight-height-max: 375px;
+
+// Legacy pixel aliases (project-wide migration safety)
+$bp-legacy-480: 480px;
+$bp-legacy-500: 500px;
+$bp-legacy-520: 520px;
+$bp-legacy-560: 560px;
+$bp-legacy-600: 600px;
+$bp-legacy-640: 640px;
+$bp-legacy-768: 768px;
+$bp-legacy-769: 769px;
+$bp-legacy-900: 900px;
+$bp-legacy-960: 960px;
+$bp-legacy-992: 992px;
+$bp-legacy-1024: 1024px;
+$bp-legacy-1100: 1100px;
+$bp-legacy-1200: 1200px;
+$bp-legacy-1279: 1279px;
+$bp-legacy-1280: 1280px;
+$bp-legacy-1400: 1400px;
+$bp-legacy-1439: 1439px;
+$bp-legacy-1680: 1680px;
+
 // Optional second branch for @media lists: fold / dual-pane (OR with max-width). Used by Video.scss.
 $media-dual-screen-span: '(horizontal-viewport-segments: 2), (vertical-viewport-segments: 2)';
 

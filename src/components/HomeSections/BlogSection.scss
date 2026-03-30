@@ -73,6 +73,8 @@
   position: relative;
   overflow: hidden;
   margin-bottom: 32px;
+  // Allow vertical scroll, but make horizontal gestures reliable for the slider.
+  touch-action: pan-y;
 }
 
 .blog-slider-track {
@@ -295,7 +297,7 @@
   .blog-card { padding: 32px 24px 36px; }
 }
 
-@media (max-width: $bp-section-md) {
+@media (max-width: ($bp-section-sm - 1)) {
   .blog-section { padding: 44px 0 80px; }
   .blog-header { margin-bottom: 40px; }
   .blog-grid {
@@ -307,7 +309,7 @@
 }
 
 // On mobile landscape, restore 3-column layout like desktop
-@media (max-width: $bp-section-md) and (orientation: landscape) {
+@media (max-width: ($bp-section-sm - 1)) and (orientation: landscape) {
   .blog-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 18px 20px;
@@ -368,6 +370,30 @@
   .blog-card-arrow { font-size: 2.2rem; }
 
   .blog-cta { font-size: 1.2rem; }
+}
+
+// Tablet portrait (touch): increase blog typography while keeping desktop layout
+@media (pointer: coarse) and (hover: none) and (orientation: portrait) and (min-width: 768px) and (max-width: 1368px) {
+  .blog-eyebrow { font-size: 1.3rem; }
+
+  // Stack category + date into two rows (like mobile portrait)
+  .blog-card-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .blog-card-dot {
+    display: none;
+  }
+
+  .blog-card-eyebrow { font-size: 1.28rem; }
+  .blog-card-date { font-size: 1.12rem; }
+  .blog-card-title { font-size: 1.65rem; line-height: 1.35; }
+  .blog-card-description { font-size: 1.28rem; line-height: 1.75; }
+  .blog-card-arrow { font-size: 1.9rem; }
+
+  .blog-cta { font-size: 1.3rem; }
 }
 
 @media (max-width: $bp-section-xs) {

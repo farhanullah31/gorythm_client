@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { CATEGORY_ORDER } from '../../HomeSections/Courses';
 import './CoursesManagement.scss';
@@ -8,6 +7,30 @@ const getCategorySortIndex = (category) => {
     const i = CATEGORY_ORDER.indexOf(category || '');
     return i === -1 ? CATEGORY_ORDER.length : i;
 };
+
+const COLUMN_DEFS = [
+    'checkbox',
+    'title',
+    'description',
+    'category',
+    'instructor',
+    'students',
+    'price',
+    'status',
+    'duration',
+    'level',
+    'created',
+    'actions',
+];
+
+const DEFAULT_COLUMN_WIDTHS = [60, 210, 260, 180, 220, 120, 120, 130, 170, 130, 160, 220];
+// Allow shrinking without a noticeable minimum width.
+// The table layout is fixed + column widths are applied via <colgroup>,
+// so setting this to 0 enables full drag-shrink behavior.
+const COLUMN_MIN_WIDTHS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const COLUMN_MAX_WIDTHS = [90, 360, 440, 300, 380, 180, 180, 220, 280, 220, 240, 360];
+
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 const CoursesManagement = () => {
     const [courses, setCourses] = useState([]);
@@ -35,6 +58,9 @@ const CoursesManagement = () => {
     const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
     const toastTimerRef = React.useRef(null);
 
+    // Interactive column resize (drag handles in <th>, applied via <colgroup>)
+    const [columnWidths, setColumnWidths] = useState(DEFAULT_COLUMN_WIDTHS);
+
     const showConfirmation = (message, type = 'success') => {
         if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
         setToast({ show: true, message, type });
@@ -42,6 +68,54 @@ const CoursesManagement = () => {
             setToast({ show: false, message: '', type: 'success' });
             toastTimerRef.current = null;
         }, 3500);
+    };
+
+    const startColumnResize = (e, colIndex) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const startX = e.clientX;
+        const startWidth = columnWidths[colIndex];
+        const minWidth = COLUMN_MIN_WIDTHS[colIndex] ?? 0;
+        const maxWidth = COLUMN_MAX_WIDTHS[colIndex] ?? 600;
+
+        let rafId = null;
+        let latestWidth = startWidth;
+
+        const onPointerMove = (ev) => {
+            latestWidth = clamp(startWidth + (ev.clientX - startX), minWidth, maxWidth);
+
+            // Throttle updates to animation frames while dragging.
+            if (rafId) return;
+            rafId = window.requestAnimationFrame(() => {
+                rafId = null;
+                setColumnWidths((prev) => {
+                    const next = [...prev];
+                    next[colIndex] = latestWidth;
+                    return next;
+                });
+            });
+        };
+
+        const stop = () => {
+            window.removeEventListener('pointermove', onPointerMove);
+            if (rafId) window.cancelAnimationFrame(rafId);
+            document.body.style.cursor = '';
+        };
+
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', stop, { once: true });
+        window.addEventListener('pointercancel', stop, { once: true });
+
+        document.body.style.cursor = 'col-resize';
+    };
+
+    const resetColumnWidth = (colIndex) => {
+        setColumnWidths((prev) => {
+            const next = [...prev];
+            next[colIndex] = DEFAULT_COLUMN_WIDTHS[colIndex];
+            return next;
+        });
     };
 
     useEffect(() => {
@@ -811,6 +885,14 @@ setFormData({
 
             <div className="courses-table-container">
                 <table className="courses-table">
+                    <colgroup>
+                        {COLUMN_DEFS.map((key, idx) => (
+                            <col
+                                key={key}
+                                style={{ width: `${columnWidths[idx]}px` }}
+                            />
+                        ))}
+                    </colgroup>
                     <thead>
                         <tr>
                             <th className="checkbox-cell">
@@ -822,54 +904,202 @@ setFormData({
                                         toggleAllCourses();
                                     }}
                                 />
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 0)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(0);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize checkbox column"
+                                />
                             </th>
                             <th className="sortable" onClick={() => handleSort('title')}>
                                 Title
                                 {sortBy === 'title' && <i className={`fas fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></i>}
                                 {sortBy !== 'title' && <i className="fas fa-sort"></i>}
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 1)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(1);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize Title column"
+                                />
                             </th>
-                            <th>Description</th>
+                            <th>
+                                Description
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 2)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(2);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize Description column"
+                                />
+                            </th>
                             <th className="sortable" onClick={() => handleSort('category')}>
                                 Category
                                 {sortBy === 'category' && <i className={`fas fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></i>}
                                 {sortBy !== 'category' && <i className="fas fa-sort"></i>}
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 3)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(3);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize Category column"
+                                />
                             </th>
                             <th className="sortable" onClick={() => handleSort('instructor')}>
                                 Instructor
                                 {sortBy === 'instructor' && <i className={`fas fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></i>}
                                 {sortBy !== 'instructor' && <i className="fas fa-sort"></i>}
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 4)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(4);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize Instructor column"
+                                />
                             </th>
                             <th className="sortable" onClick={() => handleSort('students')}>
                                 Students
                                 {sortBy === 'students' && <i className={`fas fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></i>}
                                 {sortBy !== 'students' && <i className="fas fa-sort"></i>}
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 5)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(5);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize Students column"
+                                />
                             </th>
                             <th className="sortable" onClick={() => handleSort('price')}>
                                 Price
                                 {sortBy === 'price' && <i className={`fas fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></i>}
                                 {sortBy !== 'price' && <i className="fas fa-sort"></i>}
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 6)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(6);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize Price column"
+                                />
                             </th>
                             <th className="sortable" onClick={() => handleSort('status')}>
                                 Status
                                 {sortBy === 'status' && <i className={`fas fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></i>}
                                 {sortBy !== 'status' && <i className="fas fa-sort"></i>}
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 7)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(7);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize Status column"
+                                />
                             </th>
                             <th className="sortable" onClick={() => handleSort('duration')}>
                                 Duration
                                 {sortBy === 'duration' && <i className={`fas fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></i>}
                                 {sortBy !== 'duration' && <i className="fas fa-sort"></i>}
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 8)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(8);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize Duration column"
+                                />
                             </th>
                             <th className="sortable" onClick={() => handleSort('level')}>
                                 Level
                                 {sortBy === 'level' && <i className={`fas fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></i>}
                                 {sortBy !== 'level' && <i className="fas fa-sort"></i>}
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 9)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(9);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize Level column"
+                                />
                             </th>
                             <th className="sortable" onClick={() => handleSort('created')}>
                                 Created
                                 {sortBy === 'created' && <i className={`fas fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></i>}
                                 {sortBy !== 'created' && <i className="fas fa-sort"></i>}
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 10)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(10);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize Created column"
+                                />
                             </th>
-                            <th>Actions</th>
+                            <th>
+                                Actions
+                                <span
+                                    className="col-resizer"
+                                    onPointerDown={(e) => startColumnResize(e, 11)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        resetColumnWidth(11);
+                                    }}
+                                    role="separator"
+                                    aria-label="Resize Actions column"
+                                />
+                            </th>
                         </tr>
                     </thead>
                     <tbody>

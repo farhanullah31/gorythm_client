@@ -2,7 +2,7 @@
 // Auto left-to-right slider with dot indicators
 
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { blogPosts } from '../Pages/BlogData';
 import './BlogSection.scss';
 
@@ -12,7 +12,9 @@ const AUTO_ADVANCE_MS = 5000;
 const BlogSection = () => {
   const sectionRef = useRef(null);
   const sliderRef = useRef(null);
-  const touchStartXRef = useRef(null);
+  const navigate = useNavigate();
+  const touchStartRef = useRef(null); // { x, y }
+  const touchGestureRef = useRef({ isHorizontalSwipe: false });
   const [isInView, setIsInView] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -62,22 +64,41 @@ const BlogSection = () => {
   };
 
   const handleTouchStart = (e) => {
-    const touch = e.touches[0];
-    touchStartXRef.current = touch.clientX;
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    touchGestureRef.current = { isHorizontalSwipe: false };
+  };
+
+  const handleTouchMove = (e) => {
+    const start = touchStartRef.current;
+    const touch = e.touches?.[0];
+    if (!start || !touch) return;
+
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+
+    // Mark horizontal swipe intent early; this prevents taps from being misread
+    // and lets us treat "small movement" touches as taps.
+    if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)) {
+      touchGestureRef.current.isHorizontalSwipe = true;
+    }
   };
 
   const handleTouchEnd = (e) => {
-    if (touchStartXRef.current == null) return;
-    const touch = e.changedTouches[0];
-    const deltaX = touch.clientX - touchStartXRef.current;
-    touchStartXRef.current = null;
+    const start = touchStartRef.current;
+    const touch = e.changedTouches?.[0];
+    if (!start || !touch) return;
+
+    const dx = touch.clientX - start.x;
+    touchStartRef.current = null;
+
     const threshold = 40;
-    if (Math.abs(deltaX) < threshold) return;
-    if (deltaX < 0) {
-      goToNext();
-    } else {
-      goToPrev();
-    }
+    if (!touchGestureRef.current.isHorizontalSwipe) return;
+    if (Math.abs(dx) < threshold) return;
+
+    if (dx < 0) goToNext();
+    else goToPrev();
   };
 
   return (
@@ -95,6 +116,7 @@ const BlogSection = () => {
           className="blog-slider"
           ref={sliderRef}
           onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           <div
@@ -115,6 +137,14 @@ const BlogSection = () => {
                       key={post.id}
                       to={`/blog/${post.slug}`}
                       className={`blog-card blog_anim blog-card-${idx + 1}`}
+                      onTouchEnd={(e) => {
+                        // Some mobile browsers won't synthesize a click for nested Links
+                        // when a parent has touch listeners. Ensure taps navigate, while
+                        // still allowing horizontal swipe gestures to change slides.
+                        if (touchGestureRef.current.isHorizontalSwipe) return;
+                        e.preventDefault();
+                        navigate(`/blog/${post.slug}`);
+                      }}
                     >
                       <div className="blog-card-meta">
                         <span className="blog-card-eyebrow">{post.category}</span>

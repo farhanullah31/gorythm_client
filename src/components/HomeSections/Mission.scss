@@ -218,7 +218,7 @@
   .mission-cards { gap: 0 24px; }
 }
 
-@media (max-width: $bp-section-md) {
+@media (max-width: ($bp-section-sm - 1)) {
   .mission-section { padding: 0 0 70px; }
 
   .mission-cards {
@@ -233,7 +233,7 @@
   }
 }
 
-@media (max-width: $bp-section-md) and (orientation: landscape) {
+@media (max-width: ($bp-section-sm - 1)) and (orientation: landscape) {
   .mission-cards { grid-template-columns: repeat(3, 1fr); }
   .mission-card:last-child { grid-column: auto; max-width: 100%; justify-self: auto; }
 }

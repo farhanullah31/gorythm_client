@@ -46,71 +46,6 @@
 /* Note: Legacy hero styles (.hero-section, .hero-content, .hero-tagline, .hero-subtitle, .hero-button) 
    removed to avoid conflicts with HeroSection component which uses .hero-section-enhanced */
 
-/* ===== CONTENT SECTIONS ===== */
-.content-section {
-  padding: 100px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.section-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 3rem;
-}
-
-.section-number {
-  font-size: 4rem;
-  font-weight: 800;
-  color: rgba(var(--color-primary-rgb), 0.14);
-  margin-right: 30px;
-  line-height: 1;
-}
-
-.section-title {
-  font-size: 2.5rem;
-  color: #f8fafc;
-  max-width: 800px;
-}
-
-.section-description {
-  font-size: 1.2rem;
-  color: var(--color-muted);
-  max-width: 900px;
-  line-height: 1.8;
-}
-
-/* Section 01 - Feature Grid */
-.section-01 .section-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-}
-
-  .feature-card {
-  background: rgba(var(--color-text-dark-rgb), 0.08);
-  border-radius: 10px;
-  padding: 30px;
-  border: 1px solid rgba(var(--color-primary-rgb), 0.06);
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-5px);
-    border-color: rgba(var(--color-primary-rgb), 0.18);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
-  }
-  
-  h3 {
-    color: var(--color-primary);
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-  }
-  
-  p {
-    color: var(--color-text);
-    line-height: 1.7;
-  }
-}
-
 /* ===== NEWSLETTER SECTION ===== */
 .newsletter-section {
   padding: 100px 0;
@@ -130,7 +65,7 @@
   margin: 0 auto;
   gap: 10px;
   
-  @media (max-width: 768px) {
+  @include respond-to('home-mobile') {
     flex-direction: column;
   }
 }
@@ -166,50 +101,14 @@
     box-shadow: 0 8px 20px rgba(var(--color-primary-rgb), 0.18);
   }
   
-  @media (max-width: 768px) {
+  @include respond-to('home-mobile') {
     width: 100%;
   }
 }
 
-/* ===== PAGE TITLES (For Blog/Gallery) ===== */
-.page-title {
-  padding: 100px 0;
-  text-align: center;
-  
-  h1 {
-    font-size: 3rem;
-    color: var(--color-accent-2);
-    margin-bottom: 1rem;
-  }
-  
-  p {
-    font-size: 1.2rem;
-    color: var(--color-muted);
-  }
-}
-
 /* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-  .hero-tagline {
-    font-size: 2.5rem;
-  }
-  
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .section-number {
-    font-size: 3rem;
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
-  
-  .section-title {
-    font-size: 2rem;
-  }
-  
-  .hero-button, .newsletter-button {
+@include respond-to('home-mobile') {
+  .newsletter-button {
     padding: 14px 30px;
   }
 }
@@ -225,7 +124,7 @@
   .section-header {
     margin-bottom: 1rem;
   }
-  .front_page section caption {
+  .front_page .front_page_section_caption {
     font-size: 1.8rem;
   }
 }

@@ -237,26 +237,66 @@
   }
 }
 
-// iPad Mini portrait: closer to desktop proportions — taller left image, shorter right column
-@media (min-width: $bp-ipad-mini-min) and (max-width: $bp-ipad-mini-max) and (orientation: portrait) {
+// Tablet behavior should match desktop (no iPad-mini-only portrait tweaks)
+
+// Tablet (touch) - keep desktop-like layout proportions (portrait/landscape tuned separately)
+@media (pointer: coarse) and (hover: none) and (orientation: portrait) and (min-width: 768px) and (max-width: 1368px) {
+  // Tablet portrait: increase left image height
+  // Widen images by giving the grid columns more space (smaller gap).
+  .about_layout {
+    gap: 50px;
+  }
+
   .front_page_section_about .about_image_left {
-    width: 75%;
+    // Tablet portrait: widen vs desktop defaults
+    width: 100%;
+    height: clamp(360px, 38vh, 570px);
 
     img {
-      min-height: 380px;
-      height: 380px;
+      height: 100%;
       object-fit: cover;
     }
   }
 
+  // Keep right image at a stable desktop-like height
   .front_page_section_about .about_image_right {
-    height: 400px;
-    width: 100%; // below desktop 540px so layout matches narrow two-column desktop feel
+    width: 100%;
+    height: clamp(320px, 38vh, 520px);
+
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
   }
 }
 
-// Tablet (max 992px): single column, no overlap, label/title over digit
-@media (max-width: $bp-section-md) {
+@media (pointer: coarse) and (hover: none) and (orientation: landscape) and (min-width: 768px) and (max-width: 1368px) {
+  // Tablet landscape: increase right image height
+  .front_page_section_about .about_image_right {
+    // Tablet landscape: widen vs desktop defaults
+    width: 100%;
+    height: clamp(480px, 55vh, 700px);
+
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  // Ensure left image still fits the taller right-side rhythm
+  .front_page_section_about .about_image_left {
+    width: 80%;
+    height: clamp(440px, 60vh, 680px);
+
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+// Phone (<=767px): single column, no overlap, label/title over digit
+@media (max-width: ($bp-section-sm - 1)) {
   .about_content_wrap {
     padding-top: 0;
   }
@@ -286,8 +326,8 @@
   }
 }
 
-// Landscape tablets/phones: keep desktop-like two-column layout but scale images down to fit height
-@media (max-width: $bp-section-md) and (orientation: landscape) {
+// Phone landscape: keep desktop-like two-column layout but scale images down to fit height
+@media (max-width: ($bp-section-sm - 1)) and (orientation: landscape) {
   .front_page_section_about {
     padding: 80px 0 80px;
   }
@@ -342,8 +382,8 @@
   }
 }
 
-// Portrait at tablet/mobile (max 992px): ensure paragraph (and text) are larger so they’re not overridden
-@media (max-width: $bp-section-md) and (orientation: portrait) {
+// Portrait at phone/mobile (<=767px): ensure paragraph (and text) are larger
+@media (max-width: ($bp-section-sm - 1)) and (orientation: portrait) {
   .about_paragraph {
     font-size: 1.18rem;
     line-height: 1.75;

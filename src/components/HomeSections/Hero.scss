@@ -242,7 +242,7 @@
       }
     }
 
-    @media (max-width: $bp-section-md) {
+    @media (max-width: ($bp-section-sm - 1)) {
       .hero-center-image {
         width: 11vw;
         min-width: 70px;
@@ -250,7 +250,7 @@
     }
 
     /* ===== TABLET LANDSCAPE (768–992px wide; not tied to $bp-section-md so iPad can use desktop md cutoff) ===== */
-    @media (min-width: $bp-section-sm) and (max-width: 992px) and (orientation: landscape) {
+    @media (min-width: $bp-section-sm) and (max-width: $bp-home-tablet-max) and (orientation: landscape) {
       .hero-center-image {
         width: 8vw;
         min-width: 60px;
@@ -292,6 +292,26 @@
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
       max-width: 100%;
       word-wrap: break-word;
+    }
+  }
+
+  /* ===== TABLETS (touch) - keep desktop structure, prevent overflow ===== */
+  @media (pointer: coarse) and (hover: none) and (min-width: 768px) and (max-width: 1368px) {
+    // The desktop layout uses fixed top margin + flex space-between; on tablets it can overflow.
+    .hero-content {
+      margin-top: clamp(120px, 12vh, 200px);
+    }
+
+    // Allow the right description block to shrink instead of forcing overflow/clipping.
+    .hero-title-wrapper {
+      min-width: 0;
+      flex: 1 1 0;
+    }
+
+    .hero-description-container {
+      flex-shrink: 1;
+      max-width: min(380px, 45vw);
+      overflow-wrap: anywhere;
     }
   }
 
@@ -373,7 +393,7 @@
    *   short   ≤ 500px  — iPhone 12-16, XR, Galaxy S, Pixel, Z Fold outer (~344px), S8+ (~360px)
    *   very-short ≤ 325px — only iPhone SE 1st-gen (320px); all else show description
    */
-  @media (orientation: landscape) and (max-width: 1100px) {
+  @media (orientation: landscape) and (max-width: $bp-home-landscape-max) {
     height: 100dvh; // lock section to viewport — no page scroll
     overflow: hidden; // clip anything outside
 
@@ -461,7 +481,7 @@
    *         iPhone 12–16 (~390px), Galaxy S series (~411px), Pixel (~412px), XR (~414px).
    * Description stays visible; only sizes scaled back to fit short viewport.
    */
-  @media (orientation: landscape) and (max-width: 1100px) and (max-height: 500px) {
+  @media (orientation: landscape) and (max-width: $bp-home-landscape-max) and (max-height: $bp-home-landscape-short-max) {
     .hero-container {
       padding-top: 6px;
       padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
@@ -499,7 +519,7 @@
    * Every other device (Z Fold outer 344px, S8+ 360px, SE 2/3 375px…) is above this.
    * Description hidden — there is genuinely no room at 320px height.
    */
-  @media (orientation: landscape) and (max-width: 1100px) and (max-height: 325px) {
+  @media (orientation: landscape) and (max-width: $bp-home-landscape-max) and (max-height: $bp-home-landscape-ultra-short-max) {
     .hero-container {
       padding-top: 4px;
       padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
@@ -529,39 +549,6 @@
 
     .hero-description-container {
       display: none; // 320px height is genuinely too short for any description
-    }
-  }
-
-  /* ===== iPad Mini portrait: pull description toward title, LTR text, no extra bottom gap ===== */
-  @media (min-width: $bp-ipad-mini-min) and (max-width: $bp-ipad-mini-max) and (orientation: portrait) {
-    .hero-content {
-      justify-content: flex-start;
-      column-gap: 8px;
-      gap: 0 8px;
-      margin-bottom: 2%; // remove gap before next section
-    }
-
-    .hero-title-wrapper {
-      flex: 1 1 0;
-      min-width: 0;
-    }
-
-    .hero-title-wrapper .hero-title-line-1 .hero-center-image {
-      margin: 0 8px;
-    }
-
-    .hero-description-container {
-      flex: 0 1 auto;
-      max-width: min(300px, 36vw);
-      align-self: flex-end;
-      margin-left: 0;
-      margin-right: 0;
-      text-align: left; // container: desktop-style start alignment
-    }
-
-    .hero-description {
-      text-align: left; // read left-to-right like desktop
-      overflow-wrap: anywhere;
     }
   }
 

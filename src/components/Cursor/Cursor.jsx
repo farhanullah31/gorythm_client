@@ -8,10 +8,7 @@ const Cursor = () => {
   const [linkHovered, setLinkHovered] = useState(false);
   const [cursorSize, setCursorSize] = useState(8);
   
-  const requestRef = useRef();
-  const previousTimeRef = useRef();
   const cursorRef = useRef();
-  const followerRef = useRef();
   
   // Check if device is touch-enabled
   const isTouchDevice = typeof window !== 'undefined' && (
@@ -19,24 +16,6 @@ const Cursor = () => {
     navigator.maxTouchPoints > 0 || 
     navigator.msMaxTouchPoints > 0
   );
-  
-  // Main animation loop for smooth trailing effect
-  useEffect(() => {
-    if (isTouchDevice) return; // Don't set up for mobile
-    
-    const handleMouseMove = (e) => {
-      console.log('Mouse moved:', e.clientX, e.clientY);
-      setPosition({ x: e.clientX, y: e.clientY });
-    };
-    
-    console.log('Adding mouse listener');
-    window.addEventListener('mousemove', handleMouseMove);
-    
-    return () => {
-      console.log('Removing mouse listener');
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [isTouchDevice]);
   
   // Mouse event listeners
   useEffect(() => {
@@ -46,7 +25,7 @@ const Cursor = () => {
     
     const handleMouseMove = (e) => {
       setPosition({ x: e.clientX, y: e.clientY });
-      if (hidden) setHidden(false);
+      setHidden((prev) => (prev ? false : prev));
       clearTimeout(timeoutId);
     };
     
@@ -106,9 +85,8 @@ const Cursor = () => {
       document.removeEventListener('mouseout', handleMouseOut);
       document.body.style.cursor = 'auto';
       clearTimeout(timeoutId);
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-  }, [hidden, isTouchDevice]);
+  }, [isTouchDevice]);
   
   // Build CSS classes
   const cursorClasses = [

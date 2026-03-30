@@ -348,79 +348,14 @@
   }
 }
 
-// iPad Mini portrait: desktop-like titles + equal column heights; masonry scrolls inside right column
-// (CSS min() written as unquoted string so Sass does not evaluate its own min().)
-@media (min-width: $bp-ipad-mini-min) and (max-width: $bp-ipad-mini-max) and (orientation: portrait) {
-  .courses-section-inner {
-    align-items: stretch;
-  }
-
-  // Decorative "02" like desktop (undo global portrait centering)
-  .courses-section-big-number {
-    top: -0.17em;
-    left: 0.4em;
-    right: auto;
-    transform: none;
-    text-align: left;
-  }
-
-  .courses-section-title {
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .courses-section-title-line {
-    max-width: 55%;
-    width: 100%;
-    margin-bottom: 28px;
-  }
-
-  .courses-section-left-footer {
-    max-width: 100%;
-  }
-
-  // Shared column height — compact masonry; left/right match
-  .courses-section-left {
-    position: sticky;
-    top: 0;
-    align-self: start;
-    height: #{"min(84dvh, 650px)"};
-    min-height: #{"min(84dvh, 650px)"};
-    max-height: #{"min(84dvh, 650px)"};
-    display: flex;
-    align-items: center;
-    justify-content: stretch;
-  }
-
-  // Match desktop: no inner scroll on left — only .courses-section-right scrolls (see base .courses-section-left-sticky)
-  .courses-section-left-sticky {
-    height: 100%;
-    min-height: 0;
-    max-height: none;
-    display: block;
-    overflow: visible;
-    overflow-y: visible;
-  }
-
-  .courses-section-right {
-    height: #{"min(84dvh, 650px)"};
-    min-height: #{"min(84dvh, 650px)"};
-    max-height: #{"min(84dvh, 650px)"};
-   align-self: start;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: auto;
-    padding: 0 24px 20px 0;
-  }
-}
+// Tablet should match desktop layout (no iPad-mini-only portrait tweaks)
 
 @media (max-width: $bp-section-lg) {
   .courses-section-inner { gap: 0 24px; }
   .courses-section-title-line { margin-bottom: 28px; }
 }
 
-@media (max-width: $bp-section-md) {
+@media (max-width: ($bp-section-sm - 1)) {
   .courses-section-inner {
     grid-template-columns: 1fr;
     gap: 20px 0;
@@ -448,7 +383,7 @@
 }
 
 // Portrait: let the left section span full screen width (no inner padding)
-@media (max-width: $bp-section-md) and (orientation: portrait) {
+@media (max-width: ($bp-section-sm - 1)) and (orientation: portrait) {
   .courses-section-inner {
     padding: 0;
   }
@@ -470,7 +405,7 @@
 }
 
 // Mobile landscape: same structure as desktop – equal-height panels, masonry scrolls independently
-@media (max-width: $bp-section-md) and (orientation: landscape) {
+@media (max-width: ($bp-section-sm - 1)) and (orientation: landscape) {
   .courses-section-big-number {
     top: 0;
     transform: translateY(-18%); // stable across landscape phone heights (iOS/Samsung URL bar changes)
@@ -655,10 +590,114 @@
   }
 }
 
-// Portrait phones + iPad Mini: space after Marquee before Courses
-@media (max-width: $bp-section-md) and (orientation: portrait),
-  (min-width: $bp-ipad-mini-min) and (max-width: $bp-ipad-mini-max) and (orientation: portrait) {
+// Phone portrait only: space after Marquee before Courses
+@media (max-width: ($bp-section-sm - 1)) and (orientation: portrait) {
   .courses-section {
     padding-top: clamp(28px, 7vw, 44px);
+  }
+}
+
+/* ===== TABLETS (touch) LANDSCAPE - match left/right heights ===== */
+@media (pointer: coarse) and (hover: none) and (orientation: landscape) and (min-width: 1024px) and (max-width: 1368px) {
+  .courses-section-left {
+    height: 100dvh;
+    min-height: 100dvh; // desktop rule may set min-height; override so left can't remain taller
+  }
+
+  .courses-section-left-sticky {
+    padding: 60px 48px 60px 44px;
+  }
+
+  // Let the left column headline + description use the full available width
+  .courses-section-left-footer {
+    max-width: none;
+    width: 100%;
+  }
+
+  .courses-section-title {
+    max-width: none;
+    width: 100%;
+  }
+
+  .courses-section-description {
+    max-width: none;
+    width: 100%;
+  }
+
+  .courses-section-right {
+    max-height: 100dvh;
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+}
+
+/* ===== TABLETS (touch) PORTRAIT - shrink height + full-width text ===== */
+@media (pointer: coarse) and (hover: none) and (orientation: portrait) and (min-width: 768px) and (max-width: 1368px) {
+  // Slightly shorter than full viewport so it doesn't feel overly tall in portrait tablets.
+  .courses-section-left {
+    height: min(86dvh, 760px);
+    min-height: min(86dvh, 760px);
+  }
+
+  .courses-section-right {
+    height: min(86dvh, 760px);
+    min-height: min(86dvh, 760px);
+    max-height: min(86dvh, 760px);
+  }
+
+  // Full-width title + description within the left panel
+  .courses-section-left-footer {
+    max-width: none;
+    width: 100%;
+  }
+
+  .courses-section-title {
+    max-width: none;
+    width: 100%;
+  }
+
+  .courses-section-description {
+    max-width: none;
+    width: 100%;
+    font-size: 1.35rem; // left panel description
+  }
+
+  .courses-section-cta {
+    font-size: 1.08rem; // left panel "Contact us"
+  }
+
+  .courses-section-cta-arrow {
+    font-size: 1.4rem;
+  }
+
+  // Right panel card typography
+  .courses-section-item-category {
+    font-size: 1rem;
+  }
+
+  .courses-section-item-title {
+    font-size: 1.35rem;
+  }
+
+  .courses-section-item-description {
+    font-size: 1.08rem;
+  }
+
+  .courses-section-item-price {
+    font-size: 1.25rem;
+  }
+
+  .courses-section-item-duration,
+  .courses-section-item-audience {
+    font-size: 1.05rem;
+  }
+
+  .courses-section-item-arrow {
+    font-size: 1.2rem;
+  }
+
+  // Move "02" a bit higher on tablet portrait
+  .courses-section-big-number {
+    top: 1.2rem;
   }
 }

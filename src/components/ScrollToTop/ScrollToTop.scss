@@ -1,3 +1,5 @@
+@import '../../styles/breakpoints';
+
 .scroll-to-top {
   position: fixed;
   bottom: 30px;
@@ -44,7 +46,7 @@
     transform: translateY(-2px);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: $bp-legacy-768) {
     bottom: 20px;
     right: 20px;
     width: 45px;

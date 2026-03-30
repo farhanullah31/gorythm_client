@@ -1,4 +1,5 @@
 // =========== HEADER SOCIAL DOTS ===========
+@import '../../styles/breakpoints';
 
 // Variables for social dots
 $social-dot-size: 10px;
@@ -141,21 +142,21 @@ $social-dot-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 // =========== RESPONSIVE STYLES ===========
 
 // Hide on tablet and mobile
-@media (max-width: 1279px) {
+@media (max-width: $bp-legacy-1279) {
   .header-social-dots {
     display: none;
   }
 }
 
 // Adjust position for large screens
-@media (min-width: 1680px) {
+@media (min-width: $bp-legacy-1680) {
   .header-social-dots {
     left: 50px;
   }
 }
 
 // Adjust position for medium screens
-@media (max-width: 1439px) and (min-width: 1280px) {
+@media (max-width: $bp-legacy-1439) and (min-width: $bp-legacy-1280) {
   .header-social-dots {
     left: 25px;
     gap: 15px;

@@ -1,4 +1,5 @@
 // Admin Global Responsive Styles
+@import '../../../styles/breakpoints';
 
 // Full width container for all admin pages
 .admin-page-container {
@@ -34,7 +35,7 @@
     font-size: 1.5rem;
     cursor: pointer;
     
-    @media (max-width: 768px) {
+    @media (max-width: $bp-legacy-768) {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -42,7 +43,7 @@
 }
 
 // Responsive sidebar
-@media (max-width: 1024px) {
+@media (max-width: $bp-legacy-1024) {
     .admin-dashboard {
         .admin-sidebar {
             position: fixed;
@@ -70,7 +71,7 @@
 }
 
 // Mobile responsive adjustments
-@media (max-width: 768px) {
+@media (max-width: $bp-legacy-768) {
     .admin-header {
         flex-direction: column;
         gap: 1rem;
@@ -164,7 +165,7 @@
 }
 
 // Small mobile devices
-@media (max-width: 480px) {
+@media (max-width: $bp-legacy-480) {
     .admin-dashboard {
         .admin-sidebar {
             width: 100%;
@@ -220,7 +221,7 @@
 }
 
 // Tablet responsive
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: $bp-legacy-769) and (max-width: $bp-legacy-1024) {
     .admin-dashboard {
         .admin-sidebar {
             width: 220px;

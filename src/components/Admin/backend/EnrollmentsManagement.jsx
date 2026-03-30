@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import EnrollStudentModal from './EnrollStudentModal';
 import './EnrollmentsManagement.scss';
@@ -26,45 +26,7 @@ const EnrollmentsManagement = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
-    useEffect(() => {
-        fetchEnrollments();
-        fetchCourses();
-    }, []);
-
-    useEffect(() => {
-        fetchEnrollments();
-        fetchCourses();
-    }, []);
-
-    // 👇 ADD THIS NEW useEffect HERE 👇
-    useEffect(() => {
-        const checkTableScroll = () => {
-            const tableContainer = document.querySelector('.enrollments-table-container');
-            const table = document.querySelector('.enrollments-table');
-            
-            if (tableContainer && table) {
-                if (table.scrollWidth > tableContainer.clientWidth) {
-                    tableContainer.classList.add('has-scroll');
-                } else {
-                    tableContainer.classList.remove('has-scroll');
-                }
-            }
-        };
-        
-        // Check on mount and when enrollments change
-        checkTableScroll();
-        
-        // Add event listener for window resize
-        window.addEventListener('resize', checkTableScroll);
-        
-        return () => {
-            window.removeEventListener('resize', checkTableScroll);
-        };
-    }, [enrollments]); // Run when enrollments change
-    // 👆 NEW useEffect ENDS HERE 👆
-
-    const calculateStats = (enrollmentData) => {
-        const data = enrollmentData || enrollments;
+    const calculateStats = useCallback((data = []) => {
         const total = data.length;
         const active = data.filter(e => e.status === 'active').length;
         const completed = data.filter(e => e.status === 'completed').length;
@@ -78,9 +40,9 @@ const EnrollmentsManagement = () => {
             pendingEnrollments: pending,
             inactiveEnrollments: inactive
         });
-    };
+    }, []);
 
-    const fetchEnrollments = async () => {
+    const fetchEnrollments = useCallback(async () => {
         try {
             setLoading(true);
             setErrorMessage('');
@@ -109,9 +71,9 @@ const EnrollmentsManagement = () => {
             calculateStats([]);
             setLoading(false);
         }
-    };
+    }, [calculateStats]);
 
-    const fetchCourses = async () => {
+    const fetchCourses = useCallback(async () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get('http://localhost:5000/api/courses', {
@@ -124,8 +86,39 @@ const EnrollmentsManagement = () => {
             console.error('Error fetching courses:', error);
             setCourses([]);
         }
-    };
+    }, []);
 
+    useEffect(() => {
+        fetchEnrollments();
+        fetchCourses();
+    }, [fetchEnrollments, fetchCourses]);
+
+    // 👇 ADD THIS NEW useEffect HERE 👇
+    useEffect(() => {
+        const checkTableScroll = () => {
+            const tableContainer = document.querySelector('.enrollments-table-container');
+            const table = document.querySelector('.enrollments-table');
+            
+            if (tableContainer && table) {
+                if (table.scrollWidth > tableContainer.clientWidth) {
+                    tableContainer.classList.add('has-scroll');
+                } else {
+                    tableContainer.classList.remove('has-scroll');
+                }
+            }
+        };
+        
+        // Check on mount and when enrollments change
+        checkTableScroll();
+        
+        // Add event listener for window resize
+        window.addEventListener('resize', checkTableScroll);
+        
+        return () => {
+            window.removeEventListener('resize', checkTableScroll);
+        };
+    }, [enrollments]); // Run when enrollments change
+    // 👆 NEW useEffect ENDS HERE 👆
 
     const toggleEnrollmentSelection = (enrollmentId) => {
         setSelectedEnrollments(prev => 
@@ -344,15 +337,17 @@ const getEnrollmentStatusIcon = (status) => {
 const EditEnrollmentModal = () => {
     const [loading, setLoading] = useState(false);
     const [availableCourses, setAvailableCourses] = useState([]);
-    const [formData, setFormData] = useState({
-        studentName: '',
-        studentEmail: '',
-        courseId: '',
-        progress: 0,
-        status: 'pending',
-        grade: '',
-        enrollmentDate: ''
-    });
+    const [formData, setFormData] = useState(() => ({
+        studentName: editingEnrollment?.student?.name || '',
+        studentEmail: editingEnrollment?.student?.email || '',
+        courseId: editingEnrollment?.course?._id || '',
+        progress: editingEnrollment?.progress || 0,
+        status: editingEnrollment?.status || 'pending',
+        grade: editingEnrollment?.grade || '',
+        enrollmentDate: editingEnrollment?.enrollmentDate
+            ? new Date(editingEnrollment.enrollmentDate).toISOString().split('T')[0]
+            : new Date().toISOString().split('T')[0]
+    }));
 
     // Fetch available courses
     useEffect(() => {
@@ -372,23 +367,6 @@ const EditEnrollmentModal = () => {
         
         fetchCourses();
     }, []);
-
-    // Load data when modal opens
-    useEffect(() => {
-        if (editingEnrollment) {
-            setFormData({
-                studentName: editingEnrollment.student?.name || '',
-                studentEmail: editingEnrollment.student?.email || '',
-                courseId: editingEnrollment.course?._id || '',
-                progress: editingEnrollment.progress || 0,
-                status: editingEnrollment.status || 'pending',
-                grade: editingEnrollment.grade || '',
-                enrollmentDate: editingEnrollment.enrollmentDate 
-                    ? new Date(editingEnrollment.enrollmentDate).toISOString().split('T')[0]
-                    : new Date().toISOString().split('T')[0]
-            });
-        }
-    }, [editingEnrollment]);
 
     const handleSave = async () => {
     try {

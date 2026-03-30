@@ -318,7 +318,7 @@
   border-radius: 4px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: $bp-legacy-900) {
   .contact-page__grid {
     grid-template-columns: 1fr;
   }
@@ -328,7 +328,7 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: $bp-legacy-600) {
   .contact-page {
     padding: 112px 0 72px;
   }

@@ -6,6 +6,9 @@ const DashboardLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [sidebarFrozen, setSidebarFrozen] = useState(true);
     const footerRef = useRef(null);
+    const dashboardRef = useRef(null);
+    const sidebarRef = useRef(null);
+    const [sidebarAbsoluteTop, setSidebarAbsoluteTop] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -14,8 +17,36 @@ const DashboardLayout = () => {
         const footer = footerRef.current;
         if (!footer) return;
         const observer = new IntersectionObserver(
-            ([entry]) => setSidebarFrozen(!entry.isIntersecting),
-            { root: null, rootMargin: '0px', threshold: 0 }
+            ([entry]) => {
+                const intersecting = entry.isIntersecting;
+
+                // When the footer starts intersecting, "pin" the sidebar in-place
+                // by switching to absolute positioning at its current visual top.
+                if (intersecting) {
+                    window.requestAnimationFrame(() => {
+                        const dashboardEl = dashboardRef.current;
+                        const sidebarEl = sidebarRef.current;
+                        if (!dashboardEl || !sidebarEl) {
+                            setSidebarFrozen(false);
+                            return;
+                        }
+
+                        const dashboardRect = dashboardEl.getBoundingClientRect();
+                        const sidebarRect = sidebarEl.getBoundingClientRect();
+
+                        // Compute sidebar's top relative to the dashboard container.
+                        // (Both rects are viewport-relative, so subtracting is sufficient.)
+                        const nextTop = sidebarRect.top - dashboardRect.top;
+                        setSidebarAbsoluteTop(nextTop);
+                        setSidebarFrozen(false);
+                    });
+                } else {
+                    setSidebarFrozen(true);
+                    setSidebarAbsoluteTop(null);
+                }
+            },
+            // Trigger a bit later (closer to footer) for smoother feel.
+            { root: null, rootMargin: '0px 0px -120px 0px', threshold: 0 }
         );
         observer.observe(footer);
         return () => observer.disconnect();
@@ -55,9 +86,13 @@ const DashboardLayout = () => {
     ];
 
     return (
-        <div className="admin-dashboard">
+        <div ref={dashboardRef} className="admin-dashboard">
             {/* Sidebar */}
-            <aside className={`admin-sidebar ${sidebarOpen ? 'open' : 'closed'} ${sidebarFrozen ? 'sidebar-frozen' : 'sidebar-unfrozen'}`}>
+            <aside
+                ref={sidebarRef}
+                className={`admin-sidebar ${sidebarOpen ? 'open' : 'closed'} ${sidebarFrozen ? 'sidebar-frozen' : 'sidebar-unfrozen'}`}
+                style={!sidebarFrozen && sidebarAbsoluteTop != null ? { top: `${sidebarAbsoluteTop}px` } : undefined}
+            >
                 <div className="sidebar-header">
                     {sidebarOpen && (
                         <div className="sidebar-logo-wrap">

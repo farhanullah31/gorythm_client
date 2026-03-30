@@ -55,9 +55,9 @@
 .subscribe-headline {
   display: block;
   width: 100%;
-  font-size: clamp(2.4rem, 5.2vw, 4.2rem);
+  font-size: clamp(2.05rem, 4.6vw, 3.65rem);
   font-weight: 500;
-  line-height: 1.15;
+  line-height: 1.05;
   letter-spacing: -0.02em;
   color: #fff;
   margin: 0;
@@ -231,7 +231,7 @@
 }
 
 // Tablet (992px and below): keep 3-column row, reduce padding + make form-wrap fluid
-@media (max-width: $bp-section-md) {
+@media (max-width: ($bp-section-sm - 1)) {
   .subscribe-section { padding: 52px 0 54px; }
   .subscribe-row { gap: 34px 42px; }
   .subscribe-form-wrap { min-width: 0; } // remove 400px min so it scales with grid column
@@ -266,7 +266,7 @@
 
 @media (min-width: $bp-section-xxl) {
   .subscribe-section { padding: 100px 0 110px; }
-  .subscribe-headline { font-size: 3.75rem; }
+  .subscribe-headline { font-size: 3.25rem; }
 }
 
 // =============================================================================
@@ -275,7 +275,7 @@
 
 // Mobile/foldable landscape (≤1100px): keep elements close by controlling
 // actual column ratios and alignment (not gap only).
-@media (max-width: 1100px) and (orientation: landscape) {
+@media (max-width: $bp-home-landscape-max) and (orientation: landscape) {
   .subscribe-section { padding: 28px 0 34px; }
 
   .subscribe-row {
@@ -305,7 +305,7 @@
 }
 
 // Very short landscape phones (SE/S8+ class): compress a bit more.
-@media (max-width: 1100px) and (orientation: landscape) and (max-height: 430px) {
+@media (max-width: $bp-home-landscape-max) and (orientation: landscape) and (max-height: $bp-home-landscape-very-short-max) {
   .subscribe-row {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
     column-gap: 12px;
@@ -316,32 +316,48 @@
   }
 }
 
-// iPad Mini portrait: narrower email column + tighter spacing (still 3-column desktop row)
-@media (min-width: $bp-ipad-mini-min) and (max-width: $bp-ipad-mini-max) and (orientation: portrait) {
-  .subscribe-section {
-    padding-bottom: 28px; // less space before Key Achievements (base section uses 70px bottom)
+// Tablet should match desktop layout (no iPad-mini-only portrait tweaks)
+
+// Tablet portrait (touch): prevent overflow while keeping desktop-like 3-column row
+@media (pointer: coarse) and (hover: none) and (orientation: portrait) and (min-width: 768px) and (max-width: 1368px) {
+  .subscribe-row {
+    // tighten gaps + shrink headline track so form sits closer
+    column-gap: clamp(10px, 1.6vw, 18px);
+    row-gap: 18px;
+    grid-template-columns: auto minmax(0, 1fr) auto;
   }
 
-  .subscribe-row {
-    column-gap: 28px;
-    row-gap: 0;
-    align-items: center;
+  .subscribe-headline-wrap {
+    width: auto;
+    max-width: clamp(300px, 38vw, 520px);
   }
 
   .subscribe-headline {
-    margin: 0;
-    font-size: clamp(1.65rem, 3.4vw, 2.35rem); // smaller than desktop clamp on narrow iPad Mini portrait
+    font-size: clamp(1.65rem, 3.2vw, 2.6rem);
+    line-height: 1.08;
   }
 
   .subscribe-form-wrap {
-    min-width: 220px;
-    max-width: 220px;
-    width: 100%;
-    gap: 10px;
+    min-width: 0;
+    width: min(320px, 100%);
+    justify-self: start;
   }
 
-  .subscribe-btn-wrap {
-    margin-top: 0;
+  .subscribe-input {
+    font-size: 1.25rem;
+  }
+
+  .subscribe-privacy {
+    font-size: 1.15rem;
+  }
+
+  .subscribe-btn {
+    font-size: 1.35rem;
+  }
+
+  .subscribe-btn-icon {
+    width: 48px;
+    height: 48px;
   }
 }
 

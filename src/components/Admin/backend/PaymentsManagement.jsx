@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './PaymentsManagement.scss';
 
@@ -15,11 +15,7 @@ const PaymentsManagement = () => {
         failedPayments: 0
     });
 
-    useEffect(() => {
-        fetchPayments();
-    }, []);
-
-    const fetchPayments = async () => {
+    const fetchPayments = useCallback(async () => {
         try {
             setLoading(true);
             
@@ -100,7 +96,11 @@ const PaymentsManagement = () => {
             console.error('Error fetching payments:', error);
             setLoading(false);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        fetchPayments();
+    }, [fetchPayments]);
 
     const calculateStats = (paymentData) => {
         const stats = {

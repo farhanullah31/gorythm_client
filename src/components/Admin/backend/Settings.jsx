@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import '../Admin.scss';
 
@@ -48,12 +48,7 @@ const Settings = () => {
         passwordMinLength: 8
     });
 
-    // Load settings on component mount
-    useEffect(() => {
-        fetchSettings();
-    }, []);
-
-    const fetchSettings = async () => {
+    const fetchSettings = useCallback(async () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
@@ -63,17 +58,22 @@ const Settings = () => {
             
             if (response.data.success) {
                 // Update all settings from backend
-                setGeneralSettings(response.data.general || generalSettings);
-                setPaymentSettings(response.data.payment || paymentSettings);
-                setEmailSettings(response.data.email || emailSettings);
-                setSecuritySettings(response.data.security || securitySettings);
+                setGeneralSettings((prev) => response.data.general || prev);
+                setPaymentSettings((prev) => response.data.payment || prev);
+                setEmailSettings((prev) => response.data.email || prev);
+                setSecuritySettings((prev) => response.data.security || prev);
             }
             setLoading(false);
         } catch (error) {
             console.error('Error loading settings:', error);
             setLoading(false);
         }
-    };
+    }, []);
+
+    // Load settings on component mount
+    useEffect(() => {
+        fetchSettings();
+    }, [fetchSettings]);
 
     const handleSaveSettings = async () => {
         try {

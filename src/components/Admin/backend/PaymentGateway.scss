@@ -1,3 +1,5 @@
+@import '../../../styles/breakpoints';
+
 .payment-page {
   min-height: 100vh;
   padding: 120px 20px 100px;
@@ -368,7 +370,7 @@
   line-height: 1.6;
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-legacy-768) {
   .payment-page {
     padding: 104px 16px 80px;
   }

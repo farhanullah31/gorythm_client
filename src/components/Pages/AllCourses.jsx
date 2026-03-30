@@ -47,7 +47,7 @@ const getFirstLine = (text) => {
   if (newlineIndex !== -1) {
     return raw.slice(0, newlineIndex).trim();
   }
-  const match = raw.match(/(.+?[\.!\?])(\s|$)/);
+  const match = raw.match(/(.+?[.!?])(\s|$)/);
   if (match && match[1]) {
     return match[1].trim();
   }

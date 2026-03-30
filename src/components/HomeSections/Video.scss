@@ -191,7 +191,7 @@
   .video-section { max-height: 580px; }
 }
 
-@media (max-width: $bp-section-md), #{$media-dual-screen-span} {
+@media (max-width: ($bp-section-sm - 1)), #{$media-dual-screen-span} {
   .video-section {
     height: 55vw;
     min-height: 300px;
@@ -200,7 +200,7 @@
   .video-play-btn { width: 72px; height: 72px; }
 }
 
-@media (max-width: $bp-section-md) and (orientation: landscape) {
+@media (max-width: ($bp-section-sm - 1)) and (orientation: landscape) {
   .video-section { height: 70vh; min-height: 240px; max-height: 400px; }
 }
 
@@ -216,8 +216,8 @@
     width: 64px;
     height: 64px;
     // On mobile keep button centred; no cursor-follow
-    left: 50% !important;
-    top:  50% !important;
+    left: 50%;
+    top:  50%;
     transition: none;
   }
   .video-play-text { font-size: 0.65rem; }
@@ -249,9 +249,8 @@
   .video-play-text { font-size: 0.8rem; }
 }
 
-// Portrait phones + iPad Mini: space before Marquee
-@media (max-width: $bp-section-md) and (orientation: portrait),
-  (min-width: $bp-ipad-mini-min) and (max-width: $bp-ipad-mini-max) and (orientation: portrait) {
+// Portrait phone: space before Marquee (tablet should keep desktop spacing)
+@media (max-width: ($bp-section-sm - 1)) and (orientation: portrait) {
   .video-section {
     margin-bottom: clamp(28px, 8vw, 48px);
   }

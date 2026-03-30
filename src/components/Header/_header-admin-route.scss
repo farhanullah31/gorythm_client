@@ -1,0 +1,64 @@
+// ===============================================================
+// ADMIN DASHBOARD: header menu and blur area black (only when on /admin)
+// ===============================================================
+.academy-app.admin-route .header {
+  .nav-link,
+  .auth-buttons .btn-login {
+    color: #000;
+  }
+
+  .auth-buttons .btn-login {
+    border: 1px solid rgba(14, 4, 4, 0.329);
+  }
+
+  .auth-buttons .btn-register {
+    background: transparent;
+    color: #000;
+    border-color: #000;
+  }
+
+  .header-logo .logo-text,
+  .header-logo .logo-text .logo-primary,
+  .header-logo .logo-text .logo-secondary {
+    color: #000;
+  }
+
+  .header-whatsapp {
+    color: #000;
+
+    &:hover {
+      color: #000;
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .fab.fa-whatsapp {
+      color: #000;
+    }
+  }
+
+  .menu-grid-trigger {
+    .menu-grid-dot {
+      background-color: #000;
+    }
+
+    &:hover .menu-grid-dot,
+    &.active .menu-grid-dot {
+      background-color: #000;
+    }
+  }
+
+  .mobile-menu-toggle .toggle-line {
+    background: #000;
+  }
+
+  &.scrolled {
+    background: transparent;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+    .mobile-menu-toggle .toggle-line {
+      background: #000;
+    }
+  }
+}

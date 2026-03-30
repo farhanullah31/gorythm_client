@@ -10,12 +10,13 @@ export const useStickyPanel = ({
 }) => {
   const naturalHeightRef = useRef(0);
   const [stickyState, setStickyState] = useState({ mode: 'static', width: null, left: null });
+  const staticState = { mode: 'static', width: null, left: null };
 
   useEffect(() => {
     if (stickyRef.current) {
       naturalHeightRef.current = stickyRef.current.offsetHeight;
     }
-  }, deps);
+  }, [stickyRef, ...deps]);
 
   useEffect(() => {
     const updateSticky = () => {
@@ -26,7 +27,13 @@ export const useStickyPanel = ({
         !stickyRef.current ||
         window.innerWidth <= 992
       ) {
-        setStickyState({ mode: 'static', width: null, left: null });
+        setStickyState((prev) =>
+          prev.mode === staticState.mode &&
+          prev.width === staticState.width &&
+          prev.left === staticState.left
+            ? prev
+            : staticState
+        );
         return;
       }
 
@@ -47,7 +54,7 @@ export const useStickyPanel = ({
 
       const hasEnoughContent = boundaryHeight >= minContentHeight && stickRange >= minStickRange && stopStickAt > startStickAt;
 
-      let nextState = { mode: 'static', width: null, left: null };
+      let nextState = staticState;
 
       if (hasEnoughContent) {
         if (scrollTop <= startStickAt + hysteresis) {

@@ -1,4 +1,6 @@
 // Social Sidebar Container (fixed on the right)
+@import '../../styles/breakpoints';
+
 .social-sidebar-wrapper {
   position: fixed;
   top: 0;
@@ -276,7 +278,7 @@
 }
 
 /* RESPONSIVE */
-@media (max-width: 768px) {
+@media (max-width: $bp-legacy-768) {
   .social-sidebar-panel {
     display: none;
   }

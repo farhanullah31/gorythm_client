@@ -108,13 +108,13 @@ const Footer = () => {
                             <a href={FACEBOOK_URL} className="social-link" aria-label="Facebook">
     <i className="fab fa-facebook-f"></i>
 </a>
-<a href="#" className="social-link" aria-label="Twitter">
+<a href="https://x.com" className="social-link" aria-label="Twitter">
     <i className="fab fa-twitter"></i>
 </a>
 <a href="https://www.instagram.com/al_farhan_academy_?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" className="social-link" aria-label="Instagram">
     <i className="fab fa-instagram"></i>
 </a>
-<a href="#" className="social-link" aria-label="LinkedIn">
+<a href="https://www.linkedin.com" className="social-link" aria-label="LinkedIn">
     <i className="fab fa-linkedin-in"></i>
 </a>
 <a href="https://www.youtube.com/@alfarhanacademy" className="social-link" aria-label="YouTube">

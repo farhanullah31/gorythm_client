@@ -1,0 +1,236 @@
+// ==================== COURSE MODAL – single color scheme ====================
+.course-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    backdrop-filter: blur(6px);
+    animation: fadeIn 0.3s ease;
+    overflow: hidden;
+}
+
+.course-modal {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 800px;
+    width: 100%;
+    max-height: 85vh;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior: contain;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
+    animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 2px solid var(--color-accent);
+    
+    .course-form-card {
+        margin: 0;
+        border: none;
+        border-radius: 14px;
+        padding: 2rem;
+        background: transparent;
+        
+        .form-header {
+            position: relative;
+            padding-right: 3.5rem;
+            padding-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--color-accent);
+            
+            h2 {
+                font-size: 1.4rem;
+                color: #0f172a;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                
+                i {
+                    color: var(--color-accent);
+                }
+            }
+            
+            .editing-indicator {
+                i, strong { color: #0f172a; }
+            }
+        }
+        
+        .modal-close-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            
+            &:hover {
+                border-color: var(--color-accent);
+                background: var(--color-accent);
+                color: #fff;
+            }
+        }
+        
+        .course-form {
+            .form-row {
+                margin-bottom: 1.25rem;
+            }
+            
+            .form-group {
+                label {
+                    font-weight: 500;
+                    color: #334155;
+                    margin-bottom: 0.5rem;
+                }
+                
+                input, select, textarea {
+                    border: 2px solid #e2e8f0;
+                    padding: 0.75rem 1rem;
+                    font-size: 1rem;
+                    border-radius: 10px;
+                    background: #fff;
+                    color: #0f172a;
+                    transition: border-color 0.2s, box-shadow 0.2s;
+                    
+                    &:focus {
+                        outline: none;
+                        border-color: var(--color-accent);
+                        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+                    }
+                }
+                
+                textarea {
+                    min-height: 100px;
+                    resize: vertical;
+                }
+            }
+            
+            .form-actions {
+                padding-top: 1.5rem;
+                margin-top: 1.5rem;
+                border-top: 2px solid #e2e8f0;
+                gap: 1rem;
+                
+                .btn-primary {
+                    background: var(--color-accent);
+                    color: #fff;
+                    padding: 0.75rem 1.75rem;
+                    font-size: 1rem;
+                    border-radius: 10px;
+                    border: none;
+                    font-weight: 500;
+                    
+                    &:hover:not(:disabled) {
+                        filter: brightness(1.08);
+                        transform: translateY(-2px);
+                    }
+                }
+                
+                .btn-secondary {
+                    background: #e2e8f0;
+                    color: #475569;
+                    border: 2px solid #cbd5e1;
+                    padding: 0.75rem 1.75rem;
+                    border-radius: 10px;
+                    
+                    &:hover {
+                        background: #cbd5e1;
+                        color: #334155;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+// ==================== Admin confirmation toast ====================
+.admin-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    z-index: 2000;
+    animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    pointer-events: none;
+}
+
+.admin-toast-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    min-width: 280px;
+    max-width: 90vw;
+}
+
+.admin-toast--success .admin-toast-inner {
+    background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-toast--error .admin-toast-inner {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-toast-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.admin-toast-message {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+// Modal close button (scoped inside .course-form-card above)

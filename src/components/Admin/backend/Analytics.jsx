@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../Admin.scss';
@@ -17,7 +17,7 @@ const Analytics = () => {
     const [courseStats, setCourseStats] = useState([]);
     const [loading, setLoading] = useState(true);
     const [timeFilter, setTimeFilter] = useState('30');
-const fetchPerformanceMetrics = async () => {
+const fetchPerformanceMetrics = useCallback(async () => {
     try {
         const token = localStorage.getItem('token');
         
@@ -40,12 +40,9 @@ const fetchPerformanceMetrics = async () => {
         satisfactionScore: '0.0',
         revenueGrowth: '+0%'
     };
-};
-    useEffect(() => {
-        fetchAnalyticsData();
-    }, [timeFilter]);
+}, []);
 
-    const fetchAnalyticsData = async () => {
+    const fetchAnalyticsData = useCallback(async () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
@@ -98,7 +95,11 @@ const fetchPerformanceMetrics = async () => {
             console.error('Analytics fetch error:', error);
             setLoading(false);
         }
-    };
+    }, [fetchPerformanceMetrics, timeFilter]);
+
+    useEffect(() => {
+        fetchAnalyticsData();
+    }, [fetchAnalyticsData]);
 
 const [performanceMetrics, setPerformanceMetrics] = useState({
     enrollmentRate: '0%',

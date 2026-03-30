@@ -1,3 +1,5 @@
+@import '../../styles/breakpoints';
+
 .whatsapp-float {
   position: fixed;
   left: 24px;
@@ -27,7 +29,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-legacy-768) {
   .whatsapp-float {
     left: 16px;
     width: 50px;

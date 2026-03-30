@@ -1,0 +1,113 @@
+// ===============================================================
+// LANDSCAPE: Header and mobile menu (moved from Header.scss)
+// ===============================================================
+
+// Landscape: show hamburger and hide desktop nav when below 1280px wide; wider header (less padding)
+@media (orientation: landscape) and (max-height: 800px) {
+  .header {
+    padding: 0.4rem 0;
+
+    .desktop-nav { display: none; }
+    .mobile-menu-toggle { display: flex; }
+    .menu-grid-trigger { display: flex; }
+    .logo-slogan { display: none; }
+  }
+
+  .header .header-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (orientation: landscape) and (max-width: 1000px) and (max-height: 700px) {
+  .header .mobile-menu-toggle {
+    .toggle-line {
+      width: 22px;
+      height: 2px;
+      margin: 2px 0;
+    }
+  }
+}
+
+@media (orientation: landscape) and (min-width: 800px) and (max-height: 450px) {
+  .header .header-container { padding: 0 18px; }
+  .header .header-logo .logo-text { font-size: 1.2rem; }
+  .header .mobile-menu-toggle {
+    .toggle-line { width: 22px; height: 2px; margin: 2px 0; }
+  }
+}
+
+// Limit auth button width in landscape so they don't stretch full width
+@media (orientation: landscape) {
+  .mobile-menu-overlay .mobile-auth-buttons .btn {
+    max-width: 260px;
+  }
+}
+
+// Landscape: ensure 9-dot grid sidebar visible on right side (responsive landscape)
+@media (orientation: landscape) and (max-height: 600px) {
+  .menu-grid-panel {
+    z-index: 99999;
+    width: 320px;
+    max-width: 85vw;
+    right: -320px;
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .menu-grid-panel--open {
+    right: 0;
+  }
+
+  .menu-grid-overlay {
+    z-index: 99998;
+  }
+}
+
+@media (orientation: landscape) and (max-width: $bp-legacy-1279) and (max-height: $bp-legacy-768) {
+  .header {
+    .desktop-nav {
+      display: none;
+    }
+    .mobile-menu-toggle {
+      display: flex;
+    }
+    .menu-grid-trigger {
+      display: flex;
+    }
+    .logo-slogan {
+      display: none;
+    }
+  }
+}
+
+@media (orientation: landscape) and (min-width: $bp-legacy-1280) {
+  .header {
+    .desktop-nav {
+      display: flex;
+    }
+    .mobile-menu-toggle {
+      display: none;
+    }
+    .menu-grid-trigger {
+      display: flex;
+    }
+    .logo-slogan {
+      display: block;
+    }
+  }
+}
+
+/* Any responsive landscape: keep 9-dot trigger visible when hamburger is shown */
+@media (orientation: landscape) and (max-width: $bp-legacy-1279) {
+  .header .menu-grid-trigger {
+    display: flex;
+  }
+}
+
+/* Portrait: hide 9-dot trigger */
+@media (orientation: portrait) {
+  .header .menu-grid-trigger {
+    display: none;
+  }
+}

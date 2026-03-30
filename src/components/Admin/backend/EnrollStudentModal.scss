@@ -1,3 +1,5 @@
+@import '../../../styles/breakpoints';
+
 .modal-overlay.enroll-modal-overlay {
     position: fixed;
     top: 0;
@@ -168,7 +170,7 @@
             gap: 1.75rem;
             margin-bottom: 1.75rem;
 
-            @media (max-width: 768px) {
+            @media (max-width: $bp-legacy-768) {
                 grid-template-columns: 1fr;
             }
         }
@@ -242,7 +244,7 @@
             display: flex;
             gap: 1rem;
 
-            @media (max-width: 640px) {
+            @media (max-width: $bp-legacy-640) {
                 flex-direction: column;
                 gap: 1.5rem;
             }
@@ -293,7 +295,7 @@
                 white-space: nowrap;
                 flex-shrink: 0;
 
-                @media (max-width: 500px) {
+                @media (max-width: $bp-legacy-500) {
                     display: none;
                 }
             }
@@ -455,7 +457,7 @@
             border-top: 2px solid #e2e8f0;
             background: #f8fafc;
 
-            @media (max-width: 640px) {
+            @media (max-width: $bp-legacy-640) {
                 flex-direction: column;
                 padding: 1rem 2rem;
             }
@@ -472,7 +474,7 @@
                 gap: 8px;
                 min-width: 140px;
 
-                @media (max-width: 640px) {
+                @media (max-width: $bp-legacy-640) {
                     width: 100%;
                 }
 

@@ -8,6 +8,12 @@
     @media (max-width: $bp-xs) { @content; }
   } @else if $breakpoint == 'sm' {
     @media (max-width: $bp-sm) { @content; }
+  } @else if $breakpoint == 'home-mobile' {
+    @media (max-width: $bp-home-mobile-max) { @content; }
+  } @else if $breakpoint == 'home-phone-sm' {
+    @media (max-width: $bp-home-phone-sm-max) { @content; }
+  } @else if $breakpoint == 'home-tablet' {
+    @media (max-width: $bp-home-tablet-max) { @content; }
   } @else if $breakpoint == 'md' {
     @media (max-width: $bp-md) { @content; }
   } @else if $breakpoint == 'lg' {
@@ -19,6 +25,16 @@
   } @else if $breakpoint == 'xxxl' {
     @media (min-width: $bp-xxxl-min) { @content; }
   }
+}
+
+// Homepage orientation-aware helpers (use these in HomeSections to keep a
+// consistent and centralized responsive API).
+@mixin home-landscape {
+  @media (max-width: $bp-home-landscape-max) and (orientation: landscape) { @content; }
+}
+
+@mixin home-landscape-short {
+  @media (max-width: $bp-home-landscape-max) and (orientation: landscape) and (max-height: $bp-home-landscape-very-short-max) { @content; }
 }
 
 // Responsive container mixin
